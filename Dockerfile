@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim AS base
+FROM node:20-bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -10,20 +10,20 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY . .
-
-ENV NODE_OPTIONS="--max-old-space-size=4096"
-
 RUN corepack enable
 
-RUN yarn install --immutable
+COPY . .
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV NODE_OPTIONS=--max-old-space-size=4096
+ENV YARN_ENABLE_IMMUTABLE_INSTALLS=false
+
+RUN yarn install
 
 RUN yarn nx run twenty-server:build
 RUN yarn nx run twenty-front:build
 
 EXPOSE 3000
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-CMD ["/entrypoint.sh"]
+CMD ["yarn", "start:prod"]
