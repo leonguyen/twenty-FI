@@ -1,34 +1,39 @@
-app = "twenty-crm"
+# fly.toml app configuration file generated for twenty-fi on 2026-05-10T02:05:42Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-primary_region = "sin"
+app = 'twenty-fi'
+primary_region = 'sin'
 
 [build]
 
 [env]
-  NODE_ENV = "production"
-  PORT = "3000"
-  STORAGE_TYPE = "local"
+  NODE_ENV = 'production'
+  PORT = '3000'
+  STORAGE_TYPE = 'local'
+
+[[mounts]]
+  source = 'twenty_data'
+  destination = '/data'
 
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = "off"
+  auto_stop_machines = 'off'
   auto_start_machines = true
   min_machines_running = 1
-  processes = ["app"]
+  processes = ['app']
 
-[[http_service.checks]]
-  interval = "15s"
-  timeout = "10s"
-  grace_period = "60s"
-  method = "get"
-  path = "/"
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '10s'
+    grace_period = '1m0s'
+    method = 'get'
+    path = '/'
 
 [[vm]]
-  memory = "4096"
-  cpu_kind = "shared"
+  memory = '4096'
+  cpu_kind = 'shared'
   cpus = 2
-
-[mounts]
-  source = "twenty_data"
-  destination = "/data"
+  memory_mb = 4096
